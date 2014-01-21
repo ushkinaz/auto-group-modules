@@ -1,3 +1,4 @@
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.psi.search.FilenameIndex
 
@@ -39,7 +40,7 @@ runWriteAction {
         }
         modifiableModel.setModuleGroupPath(module, newGroup)
     }
-    show("${modules.size()} modules grouped", "AutoGroup")
+    show("${modules.size()} modules grouped", "AutoGroup", NotificationType.INFORMATION, "AutoGroupModules plugin")
     modifiableModel.commit()
 }
 
