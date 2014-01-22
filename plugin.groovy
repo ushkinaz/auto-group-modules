@@ -12,11 +12,11 @@ import static liveplugin.PluginUtil.show
 
 conf = new Configuration()
 
-mm = ModuleManager.getInstance(project)
-modifiableModel = mm.getModifiableModel()
-modules = modifiableModel.getModules()
-
 runWriteAction {
+    mm = ModuleManager.getInstance(project)
+    modifiableModel = mm.getModifiableModel()
+    modules = modifiableModel.getModules()
+
     for (module in modules) {
         MavenMetaInfo moduleInfo = extractMavenInfo(module)
 
@@ -40,7 +40,7 @@ runWriteAction {
         }
         modifiableModel.setModuleGroupPath(module, newGroup)
     }
-    show("${modules.size()} modules grouped", "AutoGroup", NotificationType.INFORMATION, "AutoGroupModules plugin")
+    show("${modules.size()} module(s) grouped", "AutoGroupModules", NotificationType.INFORMATION, "AutoGroupModules plugin")
     modifiableModel.commit()
 }
 
@@ -52,17 +52,17 @@ def extractMavenInfo(module) {
     try {
         pomFile = new XmlParser().parse(new File(file[0].virtualFile.path))
     } catch (e) {
-        return new MavenMetaInfo()
+        return [:]
     }
 
-    MavenMetaInfo moduleInfo = new MavenMetaInfo()
+    def moduleInfo = [:]
 
     moduleInfo.artifactId = pomFile.artifactId.text()
     moduleInfo.groupId = pomFile.groupId.text()
     moduleInfo.packaging = pomFile.packaging.text()
 
     if (!pomFile.parent.isEmpty()) {
-        moduleInfo.parent = new MavenMetaInfo()
+        moduleInfo.parent = [:]
         moduleInfo.parent.artifactId = pomFile.parent.packaging.text()
         moduleInfo.parent.groupId = pomFile.parent.packaging.text()
     }
@@ -72,21 +72,4 @@ def extractMavenInfo(module) {
     }
 
     return moduleInfo
-}
-
-class MavenMetaInfo {
-    MavenMetaInfo parent
-    String artifactId
-    String groupId
-    String packaging
-
-    String toString() {
-        return """\
-MavenMetaInfo{
-    parent=$parent,
-    artifactId=$artifactId,
-    groupId=$groupId,
-    packaging=$packaging
-}"""
-    }
 }
