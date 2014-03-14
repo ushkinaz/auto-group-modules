@@ -18,7 +18,7 @@ runWriteAction {
     modules = modifiableModel.getModules()
 
     for (module in modules) {
-        MavenMetaInfo moduleInfo = extractMavenInfo(module)
+        def moduleInfo = extractMavenInfo(module)
 
         newGroup = conf.packagingRules.findResult {
             if (moduleInfo?.packaging?.matches(it.key)) {
