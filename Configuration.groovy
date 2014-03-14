@@ -3,6 +3,7 @@
  */
 class Configuration {
     String[] APPLICATION_GROUP = ["application"];
+    String[] APP_UTIL_GROUP = ["application", "util"];
     String[] API_GROUP = ["lib", "api"];
     String[] SERVICES_GROUP = ["lib", "services"];
     String[] BOUNDARY_GROUP = ["lib", "boundary"];
@@ -18,16 +19,27 @@ class Configuration {
     ]
 
     def nameRules = [
+            "utils": APP_UTIL_GROUP,
+            "squirtle": APP_UTIL_GROUP,
+            "shell": APP_UTIL_GROUP,
+            "saiku": APP_UTIL_GROUP,
+            "reusable.utils": APP_UTIL_GROUP,
+
+
             ".*-api": API_GROUP,
             ".*-service": SERVICES_GROUP,
+
             ".*-boundary": BOUNDARY_GROUP,
+            "boundary": BOUNDARY_GROUP,
+
             ".*-beans": BEANS_GROUP,
             "beans": BEANS_GROUP,
+
             ".*-ext": EXT_GROUP,
 
-            "reports": SUPPLEMENTAL_GROUP,
+            "reports-resources": SUPPLEMENTAL_GROUP,
+            "fonts": SUPPLEMENTAL_GROUP,
             "update_scripts": SUPPLEMENTAL_GROUP,
-            "app\\.aggregator": SUPPLEMENTAL_GROUP,
 
             ".*-aspect": ASPECT_GROUP,
     ]
