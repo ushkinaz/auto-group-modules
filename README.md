@@ -15,7 +15,7 @@ This plugin aims to solve the issue by automagically assigning groups to modules
 
 How to install?
 ===============
- - install [live-plugin](https://github.com/dkandalov/live-plugin) plugin. This can be done via standardt IntelliJ 'plugins'
+ - install [live-plugin](https://github.com/dkandalov/live-plugin) plugin. This can be done via standard IntelliJ 'plugins'
  - in "Plugins" toolwindow choose "Add Plugin -> Plugin from Git" and use this repository address
  - in "Plugins" toolwindow run "auto-group-modules" plugin
 
