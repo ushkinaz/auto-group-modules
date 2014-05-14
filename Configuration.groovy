@@ -1,6 +1,3 @@
-/**
- * packaging rules take precedence over name rules
- */
 class Configuration {
     String[] APPLICATION_GROUP = ["application"];
     String[] APP_UTIL_GROUP = ["application", "util"];
@@ -14,33 +11,34 @@ class Configuration {
     String[] DEFAULT_GROUP = ["lib"];
 
     def packagingRules = [
-            "pom": SUPPLEMENTAL_GROUP,
-            "war": APPLICATION_GROUP,
+        "pom": SUPPLEMENTAL_GROUP,
+        "war": APPLICATION_GROUP,
+    ]
+
+    def groupRules = [
+        "ru\\.agent\\.aspect"   : ASPECT_GROUP,
+        "ru\\.agent\\.utils"    : APP_UTIL_GROUP,
+        "ru\\.agent\\.app"      : APPLICATION_GROUP,
+        "ru\\.agent\\.web"      : APPLICATION_GROUP,
+        "ru\\.agent\\.resources": SUPPLEMENTAL_GROUP,
     ]
 
     def nameRules = [
-            "utils": APP_UTIL_GROUP,
-            "squirtle": APP_UTIL_GROUP,
-            "shell": APP_UTIL_GROUP,
-            "saiku": APP_UTIL_GROUP,
-            "reusable.utils": APP_UTIL_GROUP,
 
+        ".*-api"           : API_GROUP,
+        ".*-service"       : SERVICES_GROUP,
 
-            ".*-api": API_GROUP,
-            ".*-service": SERVICES_GROUP,
+        ".*-boundary"      : BOUNDARY_GROUP,
+        "boundary"         : BOUNDARY_GROUP,
 
-            ".*-boundary": BOUNDARY_GROUP,
-            "boundary": BOUNDARY_GROUP,
+        ".*-beans"         : BEANS_GROUP,
+        "beans"            : BEANS_GROUP,
 
-            ".*-beans": BEANS_GROUP,
-            "beans": BEANS_GROUP,
+        ".*-ext"           : EXT_GROUP,
 
-            ".*-ext": EXT_GROUP,
+        "reports-resources": SUPPLEMENTAL_GROUP,
+        "fonts"            : SUPPLEMENTAL_GROUP,
+        "update_scripts"   : SUPPLEMENTAL_GROUP,
 
-            "reports-resources": SUPPLEMENTAL_GROUP,
-            "fonts": SUPPLEMENTAL_GROUP,
-            "update_scripts": SUPPLEMENTAL_GROUP,
-
-            ".*-aspect": ASPECT_GROUP,
     ]
 }

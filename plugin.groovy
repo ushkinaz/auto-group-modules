@@ -18,13 +18,22 @@ runWriteAction {
     modules = modifiableModel.getModules()
 
     for (module in modules) {
-        def moduleInfo = extractMavenInfo(module)
+        def moduleInfo = extractMavenInfo(findPomFileLocation(module))
 
         newGroup = conf.packagingRules.findResult {
             if (moduleInfo?.packaging?.matches(it.key)) {
                 return it.value
             }
             return null
+        }
+
+        if (newGroup == null) {
+            newGroup = conf.groupRules.findResult {
+                if (moduleInfo?.groupId?.matches(it.key)) {
+                    return it.value
+                }
+                return null
+            }
         }
 
         if (newGroup == null) {
@@ -35,23 +44,33 @@ runWriteAction {
                 return null
             }
         }
+
         if (newGroup == null) {
             newGroup = conf.DEFAULT_GROUP
         }
         modifiableModel.setModuleGroupPath(module, newGroup)
     }
-    show("${modules.size()} module(s) grouped", "AutoGroupModules", NotificationType.INFORMATION, "AutoGroupModules plugin")
+    show(
+        "${modules.size()} module(s) grouped",
+        "AutoGroupModules",
+        NotificationType.INFORMATION,
+        "AutoGroupModules plugin")
     modifiableModel.commit()
 }
 
-def extractMavenInfo(module) {
+def findPomFileLocation(module) {
     file = FilenameIndex.getFilesByName(project, "pom.xml", module.moduleContentScope)
     if (file.size() != 1) {
         return null
     }
+    return file[0].virtualFile.path
+}
+
+def extractMavenInfo(String pomFilePath){
+    def pomFile
     try {
-        pomFile = new XmlParser().parse(new File(file[0].virtualFile.path))
-    } catch (e) {
+        pomFile = new XmlParser().parse(new File(pomFilePath))
+    } catch (ignored) {
         return [:]
     }
 
@@ -63,8 +82,12 @@ def extractMavenInfo(module) {
 
     if (!pomFile.parent.isEmpty()) {
         moduleInfo.parent = [:]
-        moduleInfo.parent.artifactId = pomFile.parent.packaging.text()
-        moduleInfo.parent.groupId = pomFile.parent.packaging.text()
+        moduleInfo.parent.artifactId = pomFile.parent.artifactId.text()
+        moduleInfo.parent.groupId = pomFile.parent.groupId.text()
+
+        if (moduleInfo.groupId.isEmpty()){
+            moduleInfo.groupId = moduleInfo.parent.groupId
+        }
     }
 
     if (moduleInfo.packaging.isEmpty()) {
